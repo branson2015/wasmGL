@@ -7,14 +7,13 @@ add_definitions(-std=c++14)
 set(CMAKE_CXX_STANDARD 14)
 
 set(SOURCES src/render.cpp src/glad.cpp src/shader.cpp platform/OpenGL/OpenGLShader.cpp)
-set(LIBS glfw3 GL X11 pthread dl) #I don't like linking glfw3 this way - want to link against lib/GLFW/libglfw3.a
+set(LIBS GL X11 pthread dl)
 
 
 add_executable(render ${SOURCES})
 target_include_directories(render PUBLIC ${render_SOURCE_DIR})
 target_include_directories(render PUBLIC ${render_SOURCE_DIR}/src)
 target_include_directories(render PUBLIC ${render_SOURCE_DIR}/include)
-
 
 target_link_libraries(render ${LIBS})
 
@@ -29,5 +28,12 @@ if(MODE STREQUAL "wasm")
         LINK_FLAGS "-Os -s USE_WEBGL2=1 -s FULL_ES3=1 -s USE_GLFW=3 -s WASM=1 -s ASSERTIONS=1 --preload-file ../shaders")
 
 elseif(MODE STREQUAL "native")
-    #nothing, yet.
+
+    add_subdirectory(${render_SOURCE_DIR}/dependencies/glfw)
+
+    set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
+    set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+    set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+
+    target_link_libraries(render glfw)
 endif()

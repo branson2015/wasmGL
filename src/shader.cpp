@@ -1,5 +1,5 @@
 #include "shader.hpp"
-#include "platform/OpenGL/OpenGLShader.hpp"
+#include "platform/OpenGL/include/OpenGLShader.hpp"
 
 #include <fstream>
 #include <string>

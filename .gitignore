@@ -1,6 +1,6 @@
 # Project-Specific
-lib/GLFW
-include/GLFW
+build-native
+build-wasm
 
 # Prerequisites
 *.d

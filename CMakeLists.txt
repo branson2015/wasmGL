@@ -6,16 +6,17 @@ project(render)
 add_definitions(-std=c++14)
 set(CMAKE_CXX_STANDARD 14)
 
-set(SOURCES src/render.cpp src/glad.cpp src/shader.cpp platform/OpenGL/OpenGLShader.cpp)
-set(LIBS GL X11 pthread dl)
+add_executable(render "")
 
+FILE (GLOB SOURCES src/*.cpp)
 
-add_executable(render ${SOURCES})
-target_include_directories(render PUBLIC ${render_SOURCE_DIR})
-target_include_directories(render PUBLIC ${render_SOURCE_DIR}/src)
+target_sources(render PUBLIC ${SOURCES})
 target_include_directories(render PUBLIC ${render_SOURCE_DIR}/include)
 
-target_link_libraries(render ${LIBS})
+add_subdirectory(${render_SOURCE_DIR}/deps/glad)
+add_subdirectory(${render_SOURCE_DIR}/src/platform)
+
+target_link_libraries(render GL X11 pthread dl)
 
 if(MODE STREQUAL "wasm")
 
@@ -29,11 +30,12 @@ if(MODE STREQUAL "wasm")
 
 elseif(MODE STREQUAL "native")
 
-    add_subdirectory(${render_SOURCE_DIR}/dependencies/glfw)
+    add_subdirectory(${render_SOURCE_DIR}/deps/glfw)
 
     set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
     set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
     set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 
     target_link_libraries(render glfw)
+
 endif()

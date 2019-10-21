@@ -1,6 +1,6 @@
 # Project-Specific
-build-native
-build-wasm
+/build-native/
+/build-wasm/
 
 # Prerequisites
 *.d

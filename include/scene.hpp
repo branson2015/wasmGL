@@ -1,26 +1,46 @@
 #include <cinttypes> //uint32_t
 #include <set>
-#include <map>
+#include <unordered_map>
 
-#include "renderable.hpp"
+#include "model.hpp"
+#include "glm/matrix.hpp"
 
 namespace Render{
+    
+    class Node{
+    public:
+        Node(Node *_p): parent(_p){}
+        virtual Node *addChild(Node *);
+
+        glm::mat4 transform;
+    private:
+        Node *parent;
+    };
+
+    class RenderNode : public Node{
+    public:
+        RenderNode(ModelBase *_m, Node *_p): Node(_p), model(_m){}
+        Node *addChild(Node *) final;
+    private:
+        ModelBase *model;
+    };
+    
 
     class Scene{
     public:
         Scene();
         ~Scene() = default;
 
-        void add(Renderable*);
-        void remove(Renderable*);
+        Node* add(ModelBase*, Node*);
+        void remove(ModelBase*);
 
         void render() const;
 
     private:
         uint32_t m_numElements;
         //Camera camera;
-        std::set<Renderable*> m_renderables;
-        std::map<Shader *, std::set<Renderable*>> m_shaderGroups;
+        std::unordered_multimap<Shader *, Node*> m_shaderGroups;
+        Node *root;
     };
 
 }

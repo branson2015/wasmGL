@@ -14,9 +14,13 @@ target_sources(render PUBLIC ${SOURCES})
 target_include_directories(render PUBLIC ${render_SOURCE_DIR}/include)
 
 add_subdirectory(${render_SOURCE_DIR}/deps/glad)
+add_subdirectory(${render_SOURCE_DIR}/deps/glm)
 add_subdirectory(${render_SOURCE_DIR}/src/platform)
 
 target_link_libraries(render GL X11 pthread dl)
+
+
+
 
 if(MODE STREQUAL "wasm")
 

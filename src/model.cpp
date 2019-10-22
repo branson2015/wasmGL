@@ -1,9 +1,9 @@
-#include "renderable.hpp"
+#include "model.hpp"
 
 namespace Render{
 
-    Model::Model(Shader *shader){
-        m_shader = shader;
+    Model::Model(Shader *shader): ModelBase(shader){
+
     }
 
     void Model::render() const{

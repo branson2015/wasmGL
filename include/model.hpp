@@ -1,28 +1,30 @@
+#include <vector>
+
 #include "shader.hpp"
 
 
 namespace Render{
 
-    class Renderable{
+    class ModelBase{
     public:
-        virtual ~Renderable() = default;
+        virtual ~ModelBase() = default;
+        ModelBase(Shader *shader):m_shader(shader){}
 
         virtual void render() const = 0;
     protected:
-        Shader *m_shader;
+        Shader * m_shader;
 
     private:
         friend class Scene;
     };
 
 
-    class Model : public Renderable{
-        public:
+    class Model : public ModelBase{
+    public:
         Model(Shader*);
 
         virtual void render() const override;
-        private:
-        //assimp mesh
+    private:
     };
 
 }

@@ -6,7 +6,8 @@
                 "${workspaceFolder}/**",
                 "${workspaceFolder}/include",
                 "${workspaceFolder}/deps/glad/include/**",
-                "${workspaceFolder}/deps/glfw/include/**"
+                "${workspaceFolder}/deps/glfw/include/**",
+                "${workspaceFolder}/deps/glm"
             ],
             "defines": [
                 "_DEBUG",

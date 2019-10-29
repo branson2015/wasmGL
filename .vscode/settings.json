@@ -24,6 +24,23 @@
         "cinttypes": "cpp",
         "typeinfo": "cpp",
         "fstream": "cpp",
-        "map": "cpp"
+        "map": "cpp",
+        "array": "cpp",
+        "chrono": "cpp",
+        "cmath": "cpp",
+        "cstddef": "cpp",
+        "cstring": "cpp",
+        "ctime": "cpp",
+        "deque": "cpp",
+        "unordered_map": "cpp",
+        "vector": "cpp",
+        "algorithm": "cpp",
+        "functional": "cpp",
+        "ratio": "cpp",
+        "tuple": "cpp",
+        "iomanip": "cpp",
+        "numeric": "cpp",
+        "sstream": "cpp",
+        "utility": "cpp"
     }
 }

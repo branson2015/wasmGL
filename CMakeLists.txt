@@ -11,16 +11,16 @@ add_executable(render "")
 FILE (GLOB SOURCES src/*.cpp)
 
 target_sources(render PUBLIC ${SOURCES})
-target_include_directories(render PUBLIC ${render_SOURCE_DIR}/include)
+target_include_directories(render PUBLIC ${render_SOURCE_DIR}/include
+    ${render_SOURCE_DIR}/deps/glm)
+target_include_directories(render PUBLIC ${render_SOURCE_DIR}/deps/assimp/include)
 
+add_subdirectory(${render_SOURCE_DIR}/src/platform)
 add_subdirectory(${render_SOURCE_DIR}/deps/glad)
 add_subdirectory(${render_SOURCE_DIR}/deps/glm)
-add_subdirectory(${render_SOURCE_DIR}/src/platform)
 
+link_directories(${render_SOURCE_DIR}/libs)
 target_link_libraries(render GL X11 pthread dl)
-
-
-
 
 if(MODE STREQUAL "wasm")
 

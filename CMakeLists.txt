@@ -1,7 +1,7 @@
-#TODO: make this work on windows
-
 cmake_minimum_required(VERSION 3.0)
 project(render)
+
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
 
 add_definitions(-std=c++14)
 set(CMAKE_CXX_STANDARD 14)
@@ -15,12 +15,14 @@ target_include_directories(render PUBLIC ${render_SOURCE_DIR}/include
     ${render_SOURCE_DIR}/deps/glm)
 target_include_directories(render PUBLIC ${render_SOURCE_DIR}/deps/assimp/include)
 
+set(GLM_TEST_ENABLE OFF CACHE BOOL "" FORCE)
+
 add_subdirectory(${render_SOURCE_DIR}/src/platform)
 add_subdirectory(${render_SOURCE_DIR}/deps/glad)
 add_subdirectory(${render_SOURCE_DIR}/deps/glm)
 
 link_directories(${render_SOURCE_DIR}/libs)
-target_link_libraries(render GL X11 pthread dl)
+target_link_libraries(render pthread)
 
 if(MODE STREQUAL "wasm")
 
@@ -34,6 +36,16 @@ if(MODE STREQUAL "wasm")
 
 elseif(MODE STREQUAL "native")
 
+    message(STATUS "${CMAKE_SYSTEM_NAME}")
+
+    if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    
+    elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+        target_link_libraries(render GL X11 dl)
+    else()
+        message(FATAL_ERROR "Operating System \"${CMAKE_SYSTEM_NAME}\" not supported.")
+    endif()
+
     add_subdirectory(${render_SOURCE_DIR}/deps/glfw)
 
     set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
@@ -43,3 +55,5 @@ elseif(MODE STREQUAL "native")
     target_link_libraries(render glfw)
 
 endif()
+
+file(COPY ${render_SOURCE_DIR}/shaders DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

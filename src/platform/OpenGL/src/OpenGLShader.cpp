@@ -102,6 +102,8 @@ namespace Render{
         glUseProgram(0);
     }
 
-
+    void OpenGLShader::setInt(std::string &str, int val) const {
+        glUniform1i(glGetUniformLocation(m_shaderID, str.c_str()), val); 
+    }
 
 }

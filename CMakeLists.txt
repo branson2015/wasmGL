@@ -1,3 +1,5 @@
+#TODO: build assimp/glm/glfw/glad to libs directory automatically so they only have to be compiled once and linked to afterwords
+
 cmake_minimum_required(VERSION 3.0)
 project(render)
 
@@ -11,15 +13,18 @@ add_executable(render "")
 FILE (GLOB SOURCES src/*.cpp)
 
 target_sources(render PUBLIC ${SOURCES})
-target_include_directories(render PUBLIC ${render_SOURCE_DIR}/include
+target_include_directories(render PUBLIC 
+    ${render_SOURCE_DIR}/include
     ${render_SOURCE_DIR}/deps/glm)
-target_include_directories(render PUBLIC ${render_SOURCE_DIR}/deps/assimp/include)
+    ${render_SOURCE_DIR}/deps/assimp/include
+)
 
 set(GLM_TEST_ENABLE OFF CACHE BOOL "" FORCE)
 
 add_subdirectory(${render_SOURCE_DIR}/src/platform)
 add_subdirectory(${render_SOURCE_DIR}/deps/glad)
 add_subdirectory(${render_SOURCE_DIR}/deps/glm)
+add_subdirectory(${render_SOURCE_DIR}/deps/stb_image)
 
 link_directories(${render_SOURCE_DIR}/libs)
 target_link_libraries(render pthread)

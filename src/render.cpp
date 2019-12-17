@@ -155,3 +155,19 @@ void generate_frame(){
     glfwSwapBuffers(window);
     glfwPollEvents();
 }
+
+
+
+/*
+    SceneGraph scene = new SceneGraph();
+
+
+    Model m1 = new Model("path_to_file1");
+    Model m2 = new Model("path_to_file2")
+
+    SceneGraph::Node *child = scene.root->addChild(m1);
+    SceneGraph::Node *grandchild = child->addChild(m2);
+
+
+    render(scene)
+*/

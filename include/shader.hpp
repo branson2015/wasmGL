@@ -13,9 +13,14 @@ namespace Render{
 
         virtual void Bind() const = 0;
         virtual void UnBind() const = 0;
+        
+        virtual void setInt(std::string &str, int val) const = 0;
     
         static Shader *create(const std::string &vertexsrc, const std::string &fragmentsrc);
         static Shader *createFromFile(const std::string &v, const std::string &f);
+
+    protected:
+        uint32_t m_shaderID;
 
     private:
         static inline std::string FtoStr(const std::string &fn){
@@ -36,8 +41,6 @@ namespace Render{
 
             return str;
         }
-
-        
     };
 }
 

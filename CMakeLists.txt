@@ -1,4 +1,5 @@
-#TODO: build assimp/glm/glfw/glad to libs directory automatically so they only have to be compiled once and linked to afterwords
+#TODO: stop all shared libraries from being created 
+#   have makefiles automatically copy /shaders and /resources to build/bin/
 
 cmake_minimum_required(VERSION 3.0)
 project(render)
@@ -19,7 +20,7 @@ target_include_directories(render PUBLIC ${render_SOURCE_DIR}/include)
 
 add_subdirectory(${render_SOURCE_DIR}/deps)
 
-target_link_directories(render PUBLIC ${render_SOURCE_DIR}/libs)
+target_link_directories(render PUBLIC ${CMAKE_BINARY_DIR}/lib)
 
 target_link_libraries(render pthread)
 target_link_libraries(render glfw)

@@ -1,10 +1,11 @@
 #include <iostream>
-#include <utility>
+
 #include "scenegraph.hpp"
+#include "transform.hpp"
 
 namespace Render{
 
-    SceneGraph::SceneGraph(): root(new Node(nullptr)){}
+    SceneGraph::SceneGraph(): root(new Node(new Node(nullptr))){}   //new Node(new Node()) to give root an unused parent to make matrix propogation simpler
 
     void SceneGraph::add(ModelBase *model, ModelBase *parent = nullptr){
         
@@ -34,6 +35,10 @@ namespace Render{
     }
 
 
+
+
+
+
     //NODE
     SceneGraph::Node *SceneGraph::Node::add(Node *_m_parent){
         m_parent = _m_parent;
@@ -47,7 +52,7 @@ namespace Render{
     }
 
     void SceneGraph::Node::remove(){
-        if(m_parent == nullptr){
+        if(m_parent->m_parent == nullptr){
             std::cout << "Error, cannot remove root node" << std::endl;
             return;
         }
@@ -55,10 +60,30 @@ namespace Render{
             (*curr)->m_parent = m_parent;
     }
 
+    void SceneGraph::Node::update(){
+        m_worldMatrix = m_parent->m_worldMatrix * m_transform.getTransform();
+
+        for(Node *child : m_children){
+            child->update();
+        }
+    }
+    glm::vec3 SceneGraph::Node::getPosition(){
+        return glm::vec3(m_parent->m_worldMatrix * glm::vec4(m_transform.m_position, 1));
+    }
+    glm::vec4 SceneGraph::Node::getDirection(){
+        return glm::normalize(m_parent->m_worldMatrix * m_transform.getDirection());
+    }
+
+
+
+
+
+    //RenderNode
     SceneGraph::Node *SceneGraph::RenderNode::addChild(Node *child){
+
         Node *intermediate = Node::addChild(new Node(m_parent));
         intermediate->m_transform = m_transform;
-        m_transform = glm::mat4(1.0);
+        m_transform = Transform();
 
         //should have no other m_children, since RenderNodes are leaf nodes
         m_parent = intermediate;

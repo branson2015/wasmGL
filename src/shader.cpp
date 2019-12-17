@@ -14,7 +14,7 @@ namespace Render{
 
     Shader *Shader::create(const std::string &vertexsrc, const std::string &fragmentsrc){
         switch (API){
-            case NONE: exit(1);
+            case NONE: break;
             case OPENGL: return new OpenGLShader(vertexsrc, fragmentsrc);
         }
 

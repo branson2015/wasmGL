@@ -6,7 +6,7 @@
 
 namespace Render{
 
-    OpenGLShader::OpenGLShader(const std::string &vertexsrc, const std::string &fragmentsrc){
+    OpenGLShader::OpenGLShader(const std::string vertexsrc, const std::string fragmentsrc){
         
         GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
 
@@ -102,8 +102,12 @@ namespace Render{
         glUseProgram(0);
     }
 
-    void OpenGLShader::setInt(std::string &str, int val) const {
+    void OpenGLShader::setInt(const std::string &str, int val) const {
         glUniform1i(glGetUniformLocation(m_shaderID, str.c_str()), val); 
+    }
+
+    void OpenGLShader::setMat4(const std::string &str, glm::mat4 &mat) const {
+        glUniformMatrix4fv(glGetUniformLocation(m_shaderID, str.c_str()), 1, GL_FALSE, &mat[0][0]);
     }
 
 }

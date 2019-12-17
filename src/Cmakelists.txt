@@ -1,0 +1,5 @@
+FILE (GLOB SOURCES *.cpp)
+
+target_sources(render PUBLIC ${SOURCES})
+
+add_subdirectory(platform)

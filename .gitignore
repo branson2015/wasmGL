@@ -1,6 +1,7 @@
 # Project-Specific
-/build-native/
+/build-linux/
 /build-wasm/
+/build-windows/
 
 # Prerequisites
 *.d

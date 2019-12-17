@@ -12,7 +12,7 @@
 
 namespace Render{
     
-    Model::Model(std::string &path, Shader *shader): ModelBase(shader){
+    Model::Model(const std::string &path, Shader *shader): ModelBase(shader){
         loadModel(path);
     }
 
@@ -22,7 +22,7 @@ namespace Render{
         }
     }
 
-    void Model::loadModel(std::string &path){
+    void Model::loadModel(const std::string &path){
         Assimp::Importer import;
         const aiScene *scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);	
         

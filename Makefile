@@ -8,11 +8,11 @@ build: cmake all
 
 #all: make all
 .PHONY: all
-all: wasm native
+all: wasm windows
 
 #cmake: cmake all
 .PHONY: cmake
-cmake: cmake-wasm cmake-native
+cmake: cmake-wasm cmake-windows
 
 #cmake-wasm: cmake for wasm distro
 .PHONY: cmake-wasm
@@ -23,14 +23,14 @@ cmake-wasm:
 #cmake-windows: cmake for windows distro
 .PHONY: cmake-windows
 cmake-windows:
-	mkdir -p build-native
-	cmd.exe /c "cd /d $(shell wslpath -w $(mkfile_dir))/build-native && cmake .. -G "MinGW Makefiles" -DMODE=native"
+	mkdir -p build-windows
+	cmd.exe /c "cd /d $(shell wslpath -w $(mkfile_dir))/build-windows && cmake .. -G "MinGW Makefiles" -DMODE=native"
 
-#cmake-native: cmake for native distro
-.PHONY: cmake-native
-cmake-native:
-	mkdir -p build-native
-	cd build-native && cmake .. -DMODE=native
+#cmake-linux: cmake for linux distro
+.PHONY: cmake-linux
+cmake-linux:
+	mkdir -p build-linux
+	cd build-linux && cmake .. -DMODE=native
 
 #wasm: make wasm
 .PHONY: wasm
@@ -38,27 +38,31 @@ wasm:
 	cd build-wasm && make
 	cd build-wasm && python -m SimpleHTTPServer 8080
 
-#native: make native
-.PHONY: native
-native:
-	cd build-native && make
+#linux: make linux
+.PHONY: linux
+linux:
+	cd build-linux && make
 
 #windows: make windows
 .PHONY: windows
 windows: 
-	cmd.exe /c "cd /d $(shell wslpath -w $(mkfile_dir))/build-native && mingw32-make"
-
+	cmd.exe /c "cd /d $(shell wslpath -w $(mkfile_dir))/build-windows && mingw32-make"
 
 #clean: clean all
 .PHONY: clean
-clean: clean-wasm clean-native
+clean: clean-wasm clean-linux clean-windows
 
 #clean-wasm: clean wasm
 .PHONY: clean-wasm
 clean-wasm:
-	rm -r build-wasm
+	rm -rf build-wasm
 
-#clean-native: clean native
-.PHONY: clean-native
-clean-native:
-	rm -r build-native
+#clean-linux: clean linux
+.PHONY: clean-linux
+clean-linux:
+	rm -rf build-linux
+
+#clean-windows: clean windows
+.PHONY: clean-windows
+clean-windows:
+	rm -rf build-windows

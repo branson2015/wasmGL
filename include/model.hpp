@@ -5,6 +5,7 @@
 #include <string>
 
 #include "shader.hpp"
+#include "scenegraph.hpp"
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
@@ -57,7 +58,7 @@ namespace Render{
     unsigned int TextureFromFile(const char *path, const std::string &directory, bool gamma = false);
 
 
-    class Model : public ModelBase{
+    class Model : public ModelBase, public SceneGraph::Node{
     public:
         Model(const std::string &path, Shader*);
         void draw();

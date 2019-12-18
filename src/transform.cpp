@@ -29,6 +29,11 @@ Transform &Transform::translate(const glm::vec3 &translation){
     return *this;
 }
 
+Transform &Transform::translateTo(const glm::vec3 &translation){
+    m_position =  translation;
+    return *this;
+}
+
 glm::mat4 Transform::getTransform() const {
     return glm::translate(m_position) * glm::toMat4(m_rotation) * glm::scale(m_scale);
 }

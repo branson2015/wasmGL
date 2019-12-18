@@ -106,7 +106,7 @@ namespace Render{
         glUniform1i(glGetUniformLocation(m_shaderID, str.c_str()), val); 
     }
 
-    void OpenGLShader::setMat4(const std::string &str, glm::mat4 &mat) const {
+    void OpenGLShader::setMat4(const std::string &str, const glm::mat4 &mat) const {
         glUniformMatrix4fv(glGetUniformLocation(m_shaderID, str.c_str()), 1, GL_FALSE, &mat[0][0]);
     }
 

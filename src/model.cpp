@@ -12,7 +12,7 @@
 
 namespace Render{
     
-    Model::Model(const std::string &path, Shader *shader): ModelBase(shader){
+    Model::Model(const std::string &path, Shader *shader): ModelBase(shader), SceneGraph::Node(nullptr) {
         loadModel(path);
     }
 

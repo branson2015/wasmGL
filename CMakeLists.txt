@@ -1,6 +1,13 @@
 #TODO: stop all shared libraries from being created 
 #   have makefiles automatically copy /shaders and /resources to build/bin/
 
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    set(SYSTEM WIN32)
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:WINDOWS")
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    set(SYSTEM MACOSX_BUNDLE)
+endif()
+
 cmake_minimum_required(VERSION 3.0)
 project(render)
 
@@ -13,7 +20,7 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/libs)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/libs)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-add_executable(render "")
+add_executable(render ${SYSTEM} "")
 
 add_subdirectory(${render_SOURCE_DIR}/src)
 target_include_directories(render PUBLIC ${render_SOURCE_DIR}/include)
@@ -44,6 +51,8 @@ elseif(MODE STREQUAL "native")
         #nothing yet
     elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
         target_link_libraries(render GL X11 dl)
+    elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+        message(FATAL_ERROR "Operating System \"${CMAKE_SYSTEM_NAME}\" not yet supported.")
     else()
         message(FATAL_ERROR "Operating System \"${CMAKE_SYSTEM_NAME}\" not supported.")
     endif()

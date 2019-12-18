@@ -19,8 +19,8 @@ namespace Render{
         virtual void Bind() const override;
         virtual void UnBind() const override;
         
-        virtual void setInt(const std::string &str, int val) const override;
-        virtual void setMat4(const std::string &str, glm::mat4&) const override;
+        virtual void setInt(const std::string &str, const int val) const override;
+        virtual void setMat4(const std::string &str, const glm::mat4&) const override;
 
         void UploadUiniformFloat4(/*TODO: GLM*/);
         void UploadUniformMat4(/*TODO: GLM*/);

@@ -16,8 +16,8 @@ namespace Render{
         virtual void Bind() const = 0;
         virtual void UnBind() const = 0;
         
-        virtual void setInt(const std::string &str, int val) const = 0;
-        virtual void setMat4(const std::string &str, glm::mat4&) const = 0;
+        virtual void setInt(const std::string &str, const int val) const = 0;
+        virtual void setMat4(const std::string &str, const glm::mat4&) const = 0;
     
         static Shader *create(const std::string &vertexsrc, const std::string &fragmentsrc);
         static Shader *createFromFile(const std::string &v, const std::string &f);

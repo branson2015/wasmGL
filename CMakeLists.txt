@@ -9,8 +9,8 @@ set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/libs)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/libs)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 add_executable(render "")
@@ -20,11 +20,12 @@ target_include_directories(render PUBLIC ${render_SOURCE_DIR}/include)
 
 add_subdirectory(${render_SOURCE_DIR}/deps)
 
-target_link_directories(render PUBLIC ${CMAKE_BINARY_DIR}/lib)
+target_link_directories(render PUBLIC ${CMAKE_BINARY_DIR}/libs)
 
 target_link_libraries(render pthread)
 target_link_libraries(render glfw)
 target_link_libraries(render assimp)
+target_link_libraries(render imgui)
 
 if(MODE STREQUAL "wasm")
 

@@ -3,21 +3,15 @@
     // for the documentation about the tasks.json format
     "version": "2.0.0",
     "tasks": [
-        {
-            "label": "Build Wasm",
+        {   
+            "label": "Build windows",
             "type": "shell",
-            "command": "make wasm",
+            "command": "make",
+            "args": ["windows"],
             "group": {
                 "kind": "build",
                 "isDefault": true
-            },
-            "problemMatcher": []
-        },
-        {
-            "label": "Build Native",
-            "type": "shell",
-            "command": "make native",
-            "group": "build"
+            }
         }
     ]
 }

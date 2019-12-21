@@ -8,15 +8,22 @@
 #include <iostream>
 
 #include "model.hpp"
+#include "resources.hpp"
 #include "shader.hpp"
 
 namespace Render{
+
+    const Model *Model::create(const std::string &path, Shader *shader){
+        //std::pair<std::unordered_set<Model>::iterator, bool> ret = Resources::getInstance()->models.emplace(path, shader);
+        //return &*ret.first;
+        return nullptr;
+    }
     
-    Model::Model(const std::string &path, Shader *shader): ModelBase(shader), SceneGraph::Node(nullptr) {
+    Model::Model(const std::string &_path, Shader *shader): ModelBase(shader), path(_path){
         loadModel(path);
     }
 
-    void Model::draw(){
+    void Model::draw() const {
         for(unsigned int i = 0; i < meshes.size(); ++i){
             meshes[i].draw(m_shader);
         }
@@ -198,7 +205,7 @@ namespace Render{
         glBindVertexArray(0);
     }
 
-    void Mesh::draw(Shader *shader){
+    void Mesh::draw(Shader *shader) const {
         unsigned int diffuseNr = 1;
         unsigned int specularNr = 1;
         for(unsigned int i = 0; i < textures.size(); i++)

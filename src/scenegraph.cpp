@@ -9,8 +9,8 @@ namespace Render{
 
     SceneGraph::SceneGraph(): root(new Node(new Node(nullptr))){}   //new Node(new Node()) to give root an unused parent to make matrix propogation simpler
 
-    SceneGraph::Node *const SceneGraph::add(Node * const child){
-        return child->addParent(root);
+    SceneGraph::Object *const SceneGraph::add(const Model *const model){
+        return new Object(model, root);
     }
     
     void SceneGraph::remove(Node * const node){

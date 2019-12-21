@@ -1,5 +1,3 @@
-#TODO: stop all shared libraries from being created 
-#   have makefiles automatically copy /shaders and /resources to build/bin/
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     set(SYSTEM WIN32)
@@ -42,7 +40,7 @@ if(MODE STREQUAL "wasm")
 
     set_target_properties(render 
         PROPERTIES SUFFIX ".js"
-        LINK_FLAGS "-Os -s USE_WEBGL2=1 -s FULL_ES3=1 -s USE_GLFW=3 -s WASM=1 -s ASSERTIONS=1 --preload-file ../shaders")
+        LINK_FLAGS "-Os -s USE_WEBGL2=1 -s FULL_ES3=1 -s USE_GLFW=3 -s WASM=1 -s ASSERTIONS=1 --preload-file ../resources")
 
 elseif(MODE STREQUAL "native")
     message(STATUS "building for: ${CMAKE_SYSTEM_NAME}")
@@ -57,3 +55,9 @@ elseif(MODE STREQUAL "native")
         message(FATAL_ERROR "Operating System \"${CMAKE_SYSTEM_NAME}\" not supported.")
     endif()
 endif()
+
+add_custom_command(TARGET render POST_BUILD
+    COMMAND
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${render_SOURCE_DIR}/resources $<TARGET_FILE_DIR:render>/resources/
+    COMMENT "copying resources to executable"
+)

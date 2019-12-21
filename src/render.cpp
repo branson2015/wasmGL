@@ -12,11 +12,20 @@
 
 #include <shader.hpp>
 #include <camera.hpp>
-#include <model.hpp>
 #include <scenegraph.hpp>
 #include <helper.hpp>
 
 #include <iostream>
+
+/*
+    TODO:
+- research better ways to do resource management - maybe not have everything be new allocated and store pointers, maybe store objects directly in Resource class
+- clean up #includes, make more universal #include header that includes it all for you
+- seperate loading of meshes and loading of materials into something more generic - make mesh and material classes/files?
+- replace all points with smart pointers
+- finish shader class interface - make destructor baes class virtual!
+- wrap std::cout in asserts so we can build debug and release versions that do/don't have a debugging console
+*/
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
@@ -28,7 +37,7 @@ unsigned int SCR_WIDTH = 800;
 unsigned int SCR_HEIGHT = 600;
 
 // camera
-Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+Render::Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
@@ -99,16 +108,16 @@ int main()
 
     // build and compile shaders
     // -------------------------
-    Render::Shader *ourShader = Render::Shader::createFromFile("shaders/1.model_loading.vs", "shaders/1.model_loading.fs");
-    ourShader->Bind();
+    Render::Shader *shader = Render::Shader::createFromFile("resources/shaders/1.model_loading.vs", "resources/shaders/1.model_loading.fs");
+    shader->Bind();
 
     // load models
     // -----------
-    Render::Model model("resources/objects/nanosuit/nanosuit.obj", ourShader);
+    const Render::Model *model = Render::Model::create("resources/objects/nanosuit/nanosuit.obj", shader); //this is bad, when this goes out of scope, the model will become completely unloaded - probably don't want this
 
     Render::SceneGraph Scene;
-    Scene.add(&model);
-    model.scale(0.2f);
+    Render::SceneGraph::Object *model1 = Scene.add(model);
+    model1->scale(0.2f);
     Scene.update();
 
     // draw in wireframe
@@ -138,12 +147,12 @@ int main()
         // view/projection transformations
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
         glm::mat4 view = camera.GetViewMatrix();
-        ourShader->setMat4("projection", projection);
-        ourShader->setMat4("view", view);
+        shader->setMat4("projection", projection);
+        shader->setMat4("view", view);
 
-        ourShader->setMat4("model", model.getWorldMatrix());
+        shader->setMat4("model", model1->getWorldMatrix());
         
-        model.draw();
+        model1->draw();
 
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
@@ -191,13 +200,13 @@ void processInput(GLFWwindow *window)
         glfwSetWindowShouldClose(window, true);
 
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-        camera.ProcessKeyboard(FORWARD, deltaTime);
+        camera.ProcessKeyboard(Render::FORWARD, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        camera.ProcessKeyboard(BACKWARD, deltaTime);
+        camera.ProcessKeyboard(Render::BACKWARD, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        camera.ProcessKeyboard(LEFT, deltaTime);
+        camera.ProcessKeyboard(Render::LEFT, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        camera.ProcessKeyboard(RIGHT, deltaTime);
+        camera.ProcessKeyboard(Render::RIGHT, deltaTime);
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes

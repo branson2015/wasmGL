@@ -6,6 +6,7 @@
 
 #include "glm/matrix.hpp"
 #include "transform.hpp"
+#include "model.hpp"
 
 
 //TODO: change pointers out for smart pointers
@@ -17,12 +18,13 @@ namespace Render{
     //complete SOC of SceneGraph graph and models
     class SceneGraph{
     public:
-        struct Node;
+        class Node;
+        class Object;
     
         SceneGraph();
         ~SceneGraph() = default;
 
-        Node *const add(Node * const);
+        Object *const add(const Model *const);
         void remove(Node * const);
         void update();
 
@@ -33,7 +35,7 @@ namespace Render{
 
 
 
-    struct SceneGraph::Node{
+    class SceneGraph::Node{
     public:
         Node &rotate(const glm::vec3 &axis, float angle);
         Node &scale(float scale);
@@ -47,7 +49,7 @@ namespace Render{
 
         void update();
     protected:
-        Node(Node * const _p): m_parent(_p), m_worldMatrix(1.0f), m_transform(){ if(m_parent)  m_parent->addChild(this); }
+        Node(Node * const _p): m_parent(_p), m_worldMatrix(1.0f), m_transform(){ if(m_parent)  addParent(m_parent); }
 
         Node *addParent(Node *);
         virtual Node *addChild(Node *);
@@ -62,6 +64,16 @@ namespace Render{
 
         friend class SceneGraph;
     };
+
+    class SceneGraph::Object : public SceneGraph::Node{
+    public:
+        Object(const Model *const _m, Node * const _p = nullptr): Node(_p), m_model(_m){}
+
+        inline void draw(){ m_model->draw(); }
+    private:
+        const Model *const m_model;
+    };
+
 }
 
 #endif

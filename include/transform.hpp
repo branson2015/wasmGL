@@ -5,24 +5,28 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 
-class Transform{
-    public:
-    Transform(const glm::vec3 &position = glm::vec3(), const glm::quat &rotation = glm::quat(), const glm::vec3 &scale = glm::vec3(1.0f));
+namespace Render{
 
-    inline glm::mat4 operator()(){ return getTransform(); }
-    
-    Transform &rotate(const glm::vec3 &axis, float angle);
-    Transform &scale(float scale);
-    Transform &scale(const glm::vec3 &scale);
-    Transform &translate(const glm::vec3 &translation);
-    Transform &translateTo(const glm::vec3 &translation);
+    class Transform{
+        public:
+        Transform(const glm::vec3 &position = glm::vec3(), const glm::quat &rotation = glm::quat(), const glm::vec3 &scale = glm::vec3(1.0f));
 
-    glm::mat4 getTransform() const;
-    glm::vec4 getDirection() const;
+        inline glm::mat4 operator()(){ return getTransform(); }
+        
+        Transform &rotate(const glm::vec3 &axis, float angle);
+        Transform &scale(float scale);
+        Transform &scale(const glm::vec3 &scale);
+        Transform &translate(const glm::vec3 &translation);
+        Transform &translateTo(const glm::vec3 &translation);
 
-    glm::vec3 m_position;
-    glm::quat m_rotation;
-    glm::vec3 m_scale;
+        glm::mat4 getTransform() const;
+        glm::vec4 getDirection() const;
+
+        glm::vec3 m_position;
+        glm::quat m_rotation;
+        glm::vec3 m_scale;
+        
+    };
     
 };
 

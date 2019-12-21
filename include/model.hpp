@@ -5,7 +5,6 @@
 #include <string>
 
 #include "shader.hpp"
-#include "scenegraph.hpp"
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
@@ -18,7 +17,7 @@
 namespace Render{
 
     class ModelBase{
-    public:
+    protected:
         virtual ~ModelBase() = default;
         ModelBase(Shader *shader):m_shader(shader){}
 
@@ -35,6 +34,7 @@ namespace Render{
     };
 
     struct Texture{
+        bool operator==(const Texture& rhs){ return id == rhs.id; }
         unsigned int id;
         std::string type;
         std::string path;
@@ -48,7 +48,7 @@ namespace Render{
         std::vector<Texture> textures;
 
         Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
-        void draw(Shader*);
+        void draw(Shader*) const;
         
         private:
         unsigned int VAO, VBO, EBO;
@@ -58,23 +58,27 @@ namespace Render{
     unsigned int TextureFromFile(const char *path, const std::string &directory, bool gamma = false);
 
 
-    class Model : public ModelBase, public SceneGraph::Node{
+    class Model : public ModelBase{
     public:
-        Model(const std::string &path, Shader*);
-        void draw();
+       
+        void draw() const;
+        static const Model *create(const std::string &path, Shader *);
+        
+        const std::string path;
     private:
+        Model(const std::string &path, Shader*);
 
         std::vector<Mesh> meshes;
         std::vector<Texture> textures_loaded; 
 
         std::string directory;
+        
+
         void loadModel(const std::string &path);
         void processNode(aiNode *node, const aiScene *scene);
         Mesh processMesh(aiMesh *mesh, const aiScene *scene);
         std::vector<Texture> loadMaterialTextures(aiMaterial *mat, aiTextureType type, const std::string &typeName);
     };
-
-    
 
 }
 

@@ -2,12 +2,11 @@
 #define SCENEGRAPH_H
 
 #include <vector>
-#include <map>
 
-#include "glm/matrix.hpp"
-#include "transform.hpp"
+#include <glm/matrix.hpp>
+
 #include "model.hpp"
-
+#include "transform.hpp"
 
 //TODO: change pointers out for smart pointers
 //change Node::m_children vector out for set

@@ -1,8 +1,9 @@
 #ifndef HELPER_H
 #define HELPER_H
 
-#include <glm/gtx/string_cast.hpp>
 #include <iostream>
+
+#include <glm/gtx/string_cast.hpp>
 
 namespace Render{
 

@@ -1,6 +1,4 @@
-#include "imgui.h"
-#include "examples/imgui_impl_glfw.h"
-#include "examples/imgui_impl_opengl3.h"
+#include <iostream>
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -10,20 +8,20 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/string_cast.hpp>
 
-#include <shader.hpp>
-#include <camera.hpp>
-#include <scenegraph.hpp>
-#include <helper.hpp>
+#include "imgui.h"
+#include "examples/imgui_impl_glfw.h"
+#include "examples/imgui_impl_opengl3.h"
 
-#include <iostream>
+#include "camera.hpp"
+#include "helper.hpp"
+#include "scenegraph.hpp"
+#include "shader.hpp"
 
 /*
     TODO:
-- research better ways to do resource management - maybe not have everything be new allocated and store pointers, maybe store objects directly in Resource class
-- clean up #includes, make more universal #include header that includes it all for you
 - seperate loading of meshes and loading of materials into something more generic - make mesh and material classes/files?
-- replace all points with smart pointers
-- finish shader class interface - make destructor baes class virtual!
+- replace all pointers with smart pointers
+- finish shader class interface
 - wrap std::cout in asserts so we can build debug and release versions that do/don't have a debugging console
 */
 

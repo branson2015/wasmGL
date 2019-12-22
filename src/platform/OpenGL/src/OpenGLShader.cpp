@@ -1,8 +1,8 @@
-#include "OpenGLShader.hpp"
+#include <iostream>
 
 #include <glad/glad.h>
 
-#include <iostream>
+#include "OpenGLShader.hpp"
 
 namespace Render{
 

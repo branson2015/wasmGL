@@ -1,13 +1,14 @@
 #ifndef OPENGLSHADER_H
 #define OPENGLSHADER_H
 
+#include <string>
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 #include <glm/matrix.hpp>
 
 #include "shader.hpp"
-#include <string>
 
 namespace Render{
     

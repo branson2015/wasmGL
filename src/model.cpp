@@ -1,11 +1,11 @@
+#include <iostream>
+#include <string>
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
-
-#include <string>
-#include <iostream>
 
 #include "model.hpp"
 #include "resources.hpp"
@@ -14,9 +14,7 @@
 namespace Render{
 
     const Model *Model::create(const std::string &path, Shader *shader){
-        //std::pair<std::unordered_set<Model>::iterator, bool> ret = Resources::getInstance()->models.emplace(path, shader);
-        //return &*ret.first;
-        return nullptr;
+        return Resources::getInstance()->add<Model>(new Model(path, shader));
     }
     
     Model::Model(const std::string &_path, Shader *shader): ModelBase(shader), path(_path){

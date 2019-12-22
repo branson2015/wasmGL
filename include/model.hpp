@@ -1,16 +1,16 @@
 #ifndef MODEL_H
 #define MODEL_H
 
-#include <vector>
 #include <string>
-
-#include "shader.hpp"
+#include <vector>
 
 #include <assimp/Importer.hpp>
-#include <assimp/scene.h>
 #include <assimp/postprocess.h>
+#include <assimp/scene.h>
 
 #include <glm/glm.hpp>
+
+#include "shader.hpp"
 
 //Model should represent an instantiation of a mesh/geometry - multiple models should be able to exist from one geometry, each is unique.
 

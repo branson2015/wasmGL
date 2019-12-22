@@ -1,10 +1,10 @@
+#include <fstream>
+#include <iostream>
+#include <streambuf>
+#include <string>
+
 #include "shader.hpp"
 #include "platform/OpenGL/include/OpenGLShader.hpp"
-
-#include <fstream>
-#include <string>
-#include <streambuf>
-#include <iostream>
 
 #define NONE 0
 #define OPENGL 1

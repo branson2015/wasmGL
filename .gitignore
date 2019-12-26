@@ -2,6 +2,10 @@
 /build-linux/
 /build-wasm/
 /build-windows/
+server.pyc
+
+#python
+__pycache__
 
 # Prerequisites
 *.d
@@ -48,3 +52,4 @@ install_manifest.txt
 compile_commands.json
 CTestTestfile.cmake
 _deps
+

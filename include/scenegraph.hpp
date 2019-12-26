@@ -23,6 +23,7 @@ namespace Render{
         SceneGraph();
         ~SceneGraph() = default;
 
+        //should be Node*, not Object*
         Object *const add(const Model *const);
         void remove(Node * const);
         void update();

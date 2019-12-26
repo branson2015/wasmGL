@@ -1,6 +1,8 @@
+set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
+
 
 set(GLM_TEST_ENABLE OFF CACHE BOOL "" FORCE)
-set(BUILD_STATIC_LIBS OFF CACHE BOOL "" FORCE)
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
 
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
@@ -18,8 +20,10 @@ set ( ASSIMP_BUILD_OBJ_IMPORTER ON CACHE BOOL "OBJ importer" )
 # -DZLIB_INCLUDE_DIR:PATH=/c/3rdparty/include -DZLIB_LIBRARY:FILEPATH=/c/3rdparty/lib/libzlib.dll
 
 add_subdirectory(assimp) 
-add_subdirectory(glad)
-add_subdirectory(glfw)
+    add_subdirectory(glad)
+if(NOT MODE STREQUAL "wasm")
+    add_subdirectory(glfw)
+endif()
 add_subdirectory(glm)
 add_subdirectory(stb_image)
 
@@ -41,4 +45,5 @@ add_library (imgui STATIC
     imgui/examples/imgui_impl_opengl3.cpp
 )
 
+target_sources(render PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/imgui/misc/cpp/imgui_stdlib.cpp)
 target_include_directories(imgui PUBLIC glfw/include glad/include imgui imgui/examples)

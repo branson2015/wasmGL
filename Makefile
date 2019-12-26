@@ -18,7 +18,7 @@ cmake: cmake-wasm cmake-windows
 .PHONY: cmake-wasm
 cmake-wasm:
 	mkdir -p build-wasm
-	cd build-wasm && cmake .. -DCMAKE_TOOLCHAIN_FILE=${EMSDK}/fastcomp/emscripten/cmake/Modules/Platform/Emscripten.cmake -DMODE=wasm
+	cd build-wasm && cmake -DEMSCRIPTEN=1 -DCMAKE_TOOLCHAIN_FILE=${EMSDK}/fastcomp/emscripten/cmake/Modules/Platform/Emscripten.cmake -DMODE=wasm ../ 
 
 #cmake-windows: cmake for windows distro
 .PHONY: cmake-windows
@@ -36,7 +36,7 @@ cmake-linux:
 .PHONY: wasm
 wasm:
 	cd build-wasm && make
-	cd build-wasm && python -m SimpleHTTPServer 8080
+	cd build-wasm/bin && python3 ../../server.py 8080
 
 #linux: make linux
 .PHONY: linux

@@ -6,7 +6,7 @@
 
 namespace Render{
 
-    OpenGLShader::OpenGLShader(const std::string vertexsrc, const std::string fragmentsrc){
+    OpenGLShader::OpenGLShader(const std::string vertexsrc, const std::string fragmentsrc) : Shader(vertexsrc, fragmentsrc){
         
         GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
 

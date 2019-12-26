@@ -51,6 +51,7 @@
         "memory": "cpp",
         "mutex": "cpp",
         "thread": "cpp",
-        "regex": "cpp"
+        "regex": "cpp",
+        "atomic": "cpp"
     }
 }

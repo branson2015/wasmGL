@@ -13,6 +13,9 @@ namespace Render{
     public:
         virtual ~Shader() = default;
 
+        const std::string &getVertexSource(){  return vertexSource;    }
+        const std::string &getFragmentSource(){    return fragmentSource;  }
+
         virtual void Bind() const = 0;
         virtual void UnBind() const = 0;
         
@@ -23,6 +26,11 @@ namespace Render{
         static Shader *createFromFile(const std::string &v, const std::string &f);
 
     protected:
+        Shader(const std::string &vertsrc, const std::string &fragsrc): vertexSource(vertsrc), fragmentSource(fragsrc){}
+
+        const std::string vertexSource;
+        const std::string fragmentSource;
+
         uint32_t m_shaderID;
 
     private:

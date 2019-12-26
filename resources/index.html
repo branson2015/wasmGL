@@ -2,6 +2,7 @@
 
 <html lang="en">
 <head>
+  <link rel="shortcut icon" href="#">
   <meta charset="utf-8">
   <title>wasmGL</title>
 </head>
@@ -9,29 +10,28 @@
 <body>
 
     <canvas id="canvas"></canvas>
-    <p id="output" />
+	<p id="output"></p>
+	<p id="error" ></p>
     
-		<script>
-			var Module = {
-				print: (function() {
-					var element = document.getElementById('output');
-					return function(text) {
-						element.innerHTML += text + "<br>";
-					};
-				})(),
-				printErr: function(text) {
-						if (arguments.length > 1) text = Array.prototype.slice.call(arguments).join(' ');
-						if (0) {
-							dump(text + '\n');
-						}
-				},				
-				canvas: (function() {
-					var canvas = document.getElementById('canvas');
-					return canvas;
-				})()
-      };
-      
-		</script>
-		<script src="render.js"></script>
+	<script>
+		var Module = {
+			print: (function() {
+				var element = document.getElementById('output');
+				return function(text) {
+					element.innerHTML += text + "<br>";
+				};
+			})(),
+			printErr: function(text) {
+					if (arguments.length > 1) text = Array.prototype.slice.call(arguments).join(' ');
+					document.getElementById('error').innerHTML += "ERROR: " + text + "<br>";
+			},				
+			canvas: (function() {
+				var canvas = document.getElementById('canvas');
+				return canvas;
+			})()
+		};
+	
+	</script>
+	<script src="render.js"></script>
 	</body>
 </html>

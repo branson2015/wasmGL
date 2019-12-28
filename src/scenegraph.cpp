@@ -3,13 +3,18 @@
 #include "helper.hpp"
 #include "scenegraph.hpp"
 #include "transform.hpp"
+#include "resources.hpp"
 
 namespace Render{
 
     SceneGraph::SceneGraph(): root(new Node(new Node(nullptr))){}   //new Node(new Node()) to give root an unused parent to make matrix propogation simpler
 
-    SceneGraph::Object *const SceneGraph::add(const Model *const model){
+    Object *const SceneGraph::add(const Model *const model){
         return new Object(model, root);
+    }
+
+    Object *const SceneGraph::add(const std::string &id, const Model * const model){
+        return Resources::getInstance()->add<Object>(id, new Object(model, root));
     }
     
     void SceneGraph::remove(Node * const node){
@@ -26,18 +31,22 @@ namespace Render{
 
 
     //NODE
-    SceneGraph::Node *SceneGraph::Node::addParent(Node *_m_parent){
+    Node *Node::addChild(const std::string &id){
+        return Resources::getInstance()->add<Node>(id, new Node(this));
+    }
+
+    Node *Node::addParent(Node *_m_parent){
         m_parent = _m_parent;
         m_parent->m_children.push_back(this);
         return this;
     }
 
-    SceneGraph::Node *SceneGraph::Node::addChild(Node *child){
+    Node *Node::addChild(Node *child){
         child->addParent(this);
         return this;
     }
 
-    void SceneGraph::Node::remove(){
+    void Node::remove(){
         if(m_parent->m_parent == nullptr){
             std::cout << "Error, cannot remove root node" << std::endl;
             return;
@@ -50,46 +59,46 @@ namespace Render{
         delete this;
     }
 
-    void SceneGraph::Node::update(){
+    void Node::update(){
         m_worldMatrix = m_parent->m_worldMatrix * m_transform();
 
         for(Node *child : m_children)   child->update();
     }
 
-    SceneGraph::Node &SceneGraph::Node::rotate(const glm::vec3 &axis, float angle){
+    Node &Node::rotate(const glm::vec3 &axis, float angle){
         m_transform.rotate(axis, angle);
         return *this;
     }
 
-    SceneGraph::Node &SceneGraph::Node::scale(float scale){
+    Node &Node::scale(float scale){
         m_transform.scale(scale);
         return *this;
     }
 
-    SceneGraph::Node &SceneGraph::Node::scale(const glm::vec3 &scale){
+    Node &Node::scale(const glm::vec3 &scale){
         m_transform.scale(scale);
         return *this;
     }
 
-    SceneGraph::Node &SceneGraph::Node::translate(const glm::vec3 &translation){
+    Node &Node::translate(const glm::vec3 &translation){
         m_transform.translate(translation);
         return *this;
     }
 
-    SceneGraph::Node &SceneGraph::Node::translateTo(const glm::vec3 &translation){
+    Node &Node::translateTo(const glm::vec3 &translation){
         m_transform.translateTo(translation);
         return *this;
     }
 
-    glm::vec3 SceneGraph::Node::getPosition(){
+    glm::vec3 Node::getPosition(){
         return glm::vec3(m_parent->m_worldMatrix * glm::vec4(m_transform.m_position, 1));
     }
 
-    glm::vec4 SceneGraph::Node::getDirection(){
+    glm::vec4 Node::getDirection(){
         return glm::normalize(m_parent->m_worldMatrix * m_transform.getDirection());
     }
 
-    glm::mat4 SceneGraph::Node::getWorldMatrix(){
+    glm::mat4 Node::getWorldMatrix(){
         return m_worldMatrix;
     }
 }

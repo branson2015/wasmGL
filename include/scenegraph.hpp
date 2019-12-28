@@ -12,31 +12,12 @@
 //change Node::m_children vector out for set
 
 namespace Render{
-    
 
-    //complete SOC of SceneGraph graph and models
-    class SceneGraph{
+    class Node{
     public:
-        class Node;
-        class Object;
-    
-        SceneGraph();
-        ~SceneGraph() = default;
 
-        //should be Node*, not Object*
-        Object *const add(const Model *const);
-        void remove(Node * const);
-        void update();
+        Node *addChild(const std::string &);
 
-    private:
-        Node * const root;
-    };
-
-
-
-
-    class SceneGraph::Node{
-    public:
         Node &rotate(const glm::vec3 &axis, float angle);
         Node &scale(float scale);
         Node &scale(const glm::vec3 &scale);
@@ -50,6 +31,8 @@ namespace Render{
         void update();
     protected:
         Node(Node * const _p): m_parent(_p), m_worldMatrix(1.0f), m_transform(){ if(m_parent)  addParent(m_parent); }
+
+        virtual void draw(){for(int i = 0; i < m_children.size(); ++i)  m_children[i]->draw(); }
 
         Node *addParent(Node *);
         virtual Node *addChild(Node *);
@@ -65,15 +48,34 @@ namespace Render{
         friend class SceneGraph;
     };
 
-    class SceneGraph::Object : public SceneGraph::Node{
+    class Object : public Node{
     public:
         Object(const Model *const _m, Node * const _p = nullptr): Node(_p), m_model(_m){}
 
-        inline void draw(){ m_model->draw(); }
+        virtual void draw() override { m_model->m_shader->setMat4("model", getWorldMatrix()); m_model->draw(); }
     private:
         const Model *const m_model;
     };
 
+
+    //complete SOC of SceneGraph graph and models
+    class SceneGraph{
+    public:
+    
+        SceneGraph();
+        ~SceneGraph() = default;
+
+        inline void draw(){ root->draw(); }
+
+        //should be Node*, not Object*
+        Object *const add(const Model *const);
+        Object *const add(const std::string&, const Model *const);
+        void remove(Node * const);
+        void update();
+
+    private:
+        Node * const root;
+    };
 }
 
 #endif

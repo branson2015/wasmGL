@@ -16,12 +16,12 @@
 #include "examples/imgui_impl_opengl3.h"
 #include "misc/cpp/imgui_stdlib.h"
 
-
+#include "resources.hpp"
 #include "camera.hpp"
 #include "helper.hpp"
 #include "scenegraph.hpp"
 #include "shader.hpp"
-#include "../src/engine.cpp"    //kinda bad hack to seperate Engine.hpp and Engine.cpp because templates are used
+#include "../src/engine.cpp"
 
 /*TODO:
 - seperate loading of meshes and loading of materials into something more generic - make mesh and material classes/files?
@@ -53,10 +53,8 @@ class MyEngine : public Render::Engine<MyEngine>{
     float deltaTime = 0.0f;
     float lastFrame = 0.0f;
 
-
-    //needed between init and renderFrame but haven't implimented enough of Resources to make this happen all in init yet
+    Render::Resources *resources;
     Render::Shader *shader;
-    Render::SceneGraph::Object *model1;
     float f = 0.0f;
 
     // Our IMGUI state
@@ -71,14 +69,24 @@ class MyEngine : public Render::Engine<MyEngine>{
 
 MyEngine::MyEngine(): camera(glm::vec3(0.0f, 0.0f, 3.0f)){
     glEnable(GL_DEPTH_TEST);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    //glEnable(GL_BLEND);
+    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    resources = Render::Resources::getInstance();
 
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+
+    auto frameBufferCallback = [](GLFWwindow* w, int width, int height){
+        static_cast<MyEngine*>(glfwGetWindowUserPointer(w))->framebuffer_size_callback(w, width, height);
+    };glfwSetFramebufferSizeCallback(window, frameBufferCallback);
 
     auto scrollCallback = [](GLFWwindow* w, double xoffset, double yoffset){
         static_cast<MyEngine*>(glfwGetWindowUserPointer(w))->scroll_callback(w, xoffset, yoffset);
     };glfwSetScrollCallback(window, scrollCallback);
+
+    auto mouseCallback = [](GLFWwindow* w, double xpos, double ypos){
+        static_cast<MyEngine*>(glfwGetWindowUserPointer(w))->mouse_callback(w, xpos, ypos);
+    };glfwSetCursorPosCallback(window, mouseCallback);
 
     auto mouseButtonCallback = [](GLFWwindow* w, int button, int action, int mods){
         static_cast<MyEngine*>(glfwGetWindowUserPointer(w))->mouse_button_callback(w, button, action, mods);
@@ -98,10 +106,16 @@ MyEngine::MyEngine(): camera(glm::vec3(0.0f, 0.0f, 3.0f)){
     shader = Render::Shader::createFromFile("resources/shaders/1.model_loading.vs", "resources/shaders/1.model_loading.fs");
     shader->Bind();
 
-    const Render::Model *model = Render::Model::create("resources/objects/nanosuit/nanosuit.obj", shader);
+    const Render::Model *model = Render::Model::create("model1", "resources/objects/nanosuit/nanosuit.obj", shader);
 
-    model1 = scene.add(model);
+    Render::Object *model1 = scene.add("model1", model);
     model1->scale(0.2f);
+    model1->translate(glm::vec3(1,-2, 0));
+
+    Render::Object *model2 = scene.add("model2", model);
+    model2->scale(0.2f);
+    model2->translate(glm::vec3(-1,-2, 0));
+
     scene.update();
 }
 
@@ -127,10 +141,8 @@ void MyEngine::renderFrame(){
     //wasmgl error occours here
     shader->setMat4("projection", projection);
     shader->setMat4("view", view);
-    
-    shader->setMat4("model", model1->getWorldMatrix());
-    
-    model1->draw();
+
+    scene.draw();
     
     
 
@@ -239,8 +251,8 @@ void MyEngine::mouse_callback(GLFWwindow* window, double xpos, double ypos){
 }
 
 void MyEngine::mouse_button_callback(GLFWwindow* window, int button, int action, int mods){
-    if(button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)    mousePressed = true;
-    if(button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE)  mousePressed = false;
+    if(button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)    mousePressed = true;
+    if(button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_RELEASE)  mousePressed = false;
 }
 
 void MyEngine::scroll_callback(GLFWwindow* window, double xoffset, double yoffset){

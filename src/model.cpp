@@ -14,7 +14,10 @@
 namespace Render{
 
     const Model *Model::create(const std::string &path, Shader *shader){
-        return Resources::getInstance()->add<Model>(new Model(path, shader));
+        return Resources::getInstance()->add<Model>(path, new Model(path, shader));
+    }
+    const Model *Model::create(const std::string &id, const std::string &path, Shader *shader){
+        return Resources::getInstance()->add<Model>(id, new Model(path, shader));
     }
     
     Model::Model(const std::string &_path, Shader *shader): ModelBase(shader), path(_path){
@@ -57,30 +60,8 @@ namespace Render{
         std::vector<unsigned int> indices;
         std::vector<Texture> textures;
 
-        for(unsigned int i = 0; i < mesh->mNumVertices; i++){
-            Vertex vertex;
-            // process vertex positions, normals and texture coordinates
-            glm::vec3 vector; 
-            vector.x = mesh->mVertices[i].x;
-            vector.y = mesh->mVertices[i].y;
-            vector.z = mesh->mVertices[i].z; 
-            vertex.position = vector;
-
-            vector.x = mesh->mNormals[i].x;
-            vector.y = mesh->mNormals[i].y;
-            vector.z = mesh->mNormals[i].z;
-            vertex.normal = vector;  
-
-            if(mesh->mTextureCoords[0]){ // does the mesh contain texture coordinates?
-                glm::vec2 vec;
-                vec.x = mesh->mTextureCoords[0][i].x; 
-                vec.y = mesh->mTextureCoords[0][i].y;
-                vertex.texCoords = vec;
-            }else
-                vertex.texCoords = glm::vec2(0.0f, 0.0f);  
-
-            vertices.push_back(vertex);
-        }
+        for(unsigned int i = 0; i < mesh->mNumVertices; i++)
+            vertices.emplace_back(mesh, i);
 
         // process indices
         for(unsigned int i = 0; i < mesh->mNumFaces; i++){
@@ -116,10 +97,7 @@ namespace Render{
                 }
             }
             if(!skip){   // if texture hasn't been loaded already, load it
-                Texture texture;
-                texture.id = TextureFromFile(str.C_Str(), directory);
-                texture.type = typeName;
-                texture.path = str.C_Str();
+                Texture texture(TextureFromFile(str.C_Str(), directory), typeName, str.C_Str());
                 textures.push_back(texture);
                 textures_loaded.push_back(texture); // add to loaded textures
             }
@@ -153,6 +131,10 @@ namespace Render{
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 1000);
+            glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_LOD, -1000);
+            glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_LOD,  1000);
 
             stbi_image_free(data);
         }else{
@@ -171,8 +153,7 @@ namespace Render{
 
 
 
-    Mesh::Mesh(std::vector<Vertex> v, std::vector<unsigned int> i, std::vector<Texture> t):
-        vertices(v), indices(i), textures(t){
+    Mesh::Mesh(std::vector<Vertex> v, std::vector<unsigned int> i, std::vector<Texture> t): vertices(v), indices(i), textures(t){
         setupMesh();
     }
 
@@ -209,7 +190,6 @@ namespace Render{
         for(unsigned int i = 0; i < textures.size(); i++)
         {
             glActiveTexture(GL_TEXTURE0 + i); // activate proper texture unit before binding
-            // retrieve texture number (the N in diffuse_textureN)
             std::string number;
             std::string name = textures[i].type;
             if(name == "texture_diffuse")
@@ -217,7 +197,7 @@ namespace Render{
             else if(name == "texture_specular")
                 number = std::to_string(specularNr++);
 
-            std::string uniformName = "material." + name + number;
+            std::string uniformName = name + number;
             shader->setInt(uniformName, i);
             glBindTexture(GL_TEXTURE_2D, textures[i].id);
         }

@@ -38,28 +38,28 @@ namespace Render{
     template <typename T>
     void Engine<T>::start(){
         #ifdef EMSCRIPTEN
-        emscripten_set_main_loop_arg(&Engine<T>::EmscriptenLoop, this, 0, 1);
+        emscripten_set_main_loop_arg(&Engine<T>::loop, this, 0, 1);
         #else
-        loop();
+        loop(this);
         #endif
     }
 
     template <typename T>
-    void Engine<T>::loop(){
-        #ifndef EMSCRIPTEN
-        while (!glfwWindowShouldClose(window)){
-            static_cast<T*>(this)->renderFrame();
+    void Engine<T>::loop(void *_engine){
+        T* engine = static_cast<T*>(_engine);
+        
+        #ifdef EMSCRIPTEN
+        engine->renderFrame();
+        #else
+
+        
+        while(!glfwWindowShouldClose(engine->window)){
+            engine->renderFrame();
         }
-        cleanup();
+        engine->cleanup();
+
         #endif
     }
-
-    #ifdef EMSCRIPTEN
-    template<typename T>
-    void Engine<T>::EmscriptenLoop(void* engine){
-        static_cast<T*>(engine)->renderFrame();
-    }
-    #endif
 
     template <typename T>
     void Engine<T>::cleanup(){

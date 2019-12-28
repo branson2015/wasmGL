@@ -5,7 +5,6 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
-#include <unordered_set>
 
 #include "typemap.hpp"
 
@@ -25,12 +24,14 @@ namespace Render{
         template<typename T>
         class ResourceList : public AbstractResourceList{
         protected:
-            typedef std::unordered_set<T*,  std::hash<T*>> typeSet;
+            typedef std::unordered_map<std::string, T*> typeSet;
             virtual ~ResourceList() final = default;
 
-            T *const add(T *const t){ resources.insert(t); return t; }
-            typename typeSet::iterator query(T *const t){ return resources.find(t); }
-            void remove( T*const t){ resources.erase(query(t)); }
+            T *const add(const std::string &str, T *const t){ resources.insert(std::make_pair(str, t)); return t; }
+            T* get(const std::string &str){ return resources.find(str)->second; }
+
+            void remove( T*const t){ resources.erase(get(t)); }
+            void remove(const std::string& str){ resources.erase(get(str)); }
             
             typeSet resources;
 
@@ -40,23 +41,28 @@ namespace Render{
     public:
 
         template <typename T, typename... Args>
-        static T *Allocate(Args... args){
-            getInstance()->getResourceList<T>()->add(new T(args...));
+        static T *Allocate(const std::string &str, Args... args){
+            getInstance()->getResourceList<T>()->add(str, new T(args...));
         }
         
         template <typename T>
-        static T* add(T *const t){
-            return getInstance()->getResourceList<T>()->add(t);
+        static T* add(const std::string &str, T *const t){
+            return getInstance()->getResourceList<T>()->add(str, t);
         }
-        
+
+        template <typename T>
+        static T* get(const std::string &str){
+            return getInstance()->getResourceList<T>()->get(str);
+        }
+
         template<typename T>
         static void remove(T *const t){
             getInstance()->getResourceList<T>()->remove(t);
         }
 
-        template <typename T>
-        static bool query(const T *const t){
-            return getInstance()->getResourceList<T>()->query(t);
+        template<typename T>
+        static void remove(const std::string &str){
+            getInstance()->getResourceList<T>()->remove(str);
         }
 
         static Resources *getInstance(){

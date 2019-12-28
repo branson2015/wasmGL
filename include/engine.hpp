@@ -16,13 +16,9 @@ namespace Render{
         ~Engine() = default;
 
         void start();
-        
-        #ifdef EMSCRIPTEN
-        static void EmscriptenLoop(void*);
-        #endif
 
         void cleanup();
-        void loop();
+        static void loop(void*);
 
     //protected:
 

@@ -4,6 +4,8 @@
 #include "examples/imgui_impl_glfw.h"
 #include "examples/imgui_impl_opengl3.h"
 
+#include "logger.hpp"
+
 
 #ifdef EMSCRIPTEN
 #include <emscripten.h>
@@ -12,27 +14,13 @@
 namespace Render{
 
     template <typename T>
-    Engine<T>::Engine():m_resources(Resources::getInstance()){
+    Engine<T>::Engine():resources(Resources::getInstance()){
         
-        glfwInit();
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-
-        window = glfwCreateWindow(800, 600, "Render", NULL, NULL);
-        if(window == NULL){
-            std::cout << "Failed to create GLFW window" << std::endl;
-            glfwTerminate();
-        }
-
-        glfwMakeContextCurrent(window);
-        glfwSetWindowUserPointer(window, this);
-
-        if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)){
-            std::cout << "Failed to initialize GLAD" << std::endl;
-        }
-
+        window = Window::create(this, 800, 600);
+        
+        glEnable(GL_DEPTH_TEST);
+        //glEnable(GL_BLEND);
+        //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
 
     template <typename T>
@@ -48,16 +36,16 @@ namespace Render{
     void Engine<T>::loop(void *_engine){
         T* engine = static_cast<T*>(_engine);
         
-        #ifdef EMSCRIPTEN
-        engine->renderFrame();
-        #else
-
-        
-        while(!glfwWindowShouldClose(engine->window)){
-            engine->renderFrame();
+        #ifndef EMSCRIPTEN
+        while(!engine->window->shouldClose()){
+        #endif
+            engine->window->pollEvents();
+            engine->renderFrame();            
+            engine->window->swapBuffers();
+            
+        #ifndef EMSCRIPTEN
         }
         engine->cleanup();
-
         #endif
     }
 
@@ -66,7 +54,7 @@ namespace Render{
         ImGui_ImplOpenGL3_Shutdown();
         ImGui_ImplGlfw_Shutdown();
         ImGui::DestroyContext();
-        glfwTerminate();
+        window->terminate();
     }
 
 }

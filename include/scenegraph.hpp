@@ -52,7 +52,7 @@ namespace Render{
     public:
         Object(const Model *const _m, Node * const _p = nullptr): Node(_p), m_model(_m){}
 
-        virtual void draw() override { m_model->m_shader->setMat4("model", getWorldMatrix()); m_model->draw(); }
+        virtual void draw() override { Node::draw(); m_model->m_shader->setMat4("model", getWorldMatrix()); m_model->draw(); }
     private:
         const Model *const m_model;
     };

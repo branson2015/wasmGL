@@ -3,12 +3,9 @@
 #include <streambuf>
 #include <string>
 
+#include "render.hpp"
 #include "shader.hpp"
 #include "platform/OpenGL/include/OpenGLShader.hpp"
-
-#define NONE 0
-#define OPENGL 1
-#define API OPENGL
 
 namespace Render{
 

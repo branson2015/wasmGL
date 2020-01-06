@@ -10,6 +10,7 @@
 #include "model.hpp"
 #include "resources.hpp"
 #include "shader.hpp"
+#include "logger.hpp"
 
 namespace Render{
 
@@ -35,7 +36,7 @@ namespace Render{
         const aiScene *scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);	
         
         if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
-            std::cout << "ERROR::ASSIMP::" << import.GetErrorString() << std::endl;
+            LOG("ERROR::ASSIMP::%s", import.GetErrorString());
             return;
         }
         directory = path.substr(0, path.find_last_of('/'));
@@ -138,7 +139,7 @@ namespace Render{
 
             stbi_image_free(data);
         }else{
-            std::cout << "Texture failed to load at path: " << path << std::endl;
+            LOG("Texture failed to load at path: %d", path);
             stbi_image_free(data);
         }
         return textureID;

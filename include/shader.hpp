@@ -7,6 +7,8 @@
 
 #include <glm/matrix.hpp>
 
+#include "logger.hpp"
+
 namespace Render{
 
     class Shader{
@@ -38,7 +40,7 @@ namespace Render{
             std::ifstream f(fn);
 
             if(!f.is_open()){
-                std::cout << "File " << fn << " could not be opened." << std::endl;
+                LOG("File %s could not be opened", fn.c_str());
                 return nullptr;
             }
 

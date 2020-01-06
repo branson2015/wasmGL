@@ -3,6 +3,7 @@
 #include <glad/glad.h>
 
 #include "OpenGLShader.hpp"
+#include "logger.hpp"
 
 namespace Render{
 
@@ -25,8 +26,7 @@ namespace Render{
 
             glDeleteShader(vertexShader);
 
-            //TODO: better error logging
-            std::cout << infoLog << std::endl;
+            LOG(infoLog);
 
             delete[] infoLog;
 
@@ -50,7 +50,7 @@ namespace Render{
             glDeleteShader(fragmentShader);
 
             //TODO: better error logging
-            std::cout << infoLog << std::endl;
+            LOG(infoLog);
 
             delete[] infoLog;
 
@@ -78,8 +78,7 @@ namespace Render{
             glDeleteShader(vertexShader);
             glDeleteShader(fragmentShader);
 
-            //TODO: better error logging
-            std::cout << infoLog << std::endl;
+            LOG(infoLog);
 
             delete[] infoLog;
 

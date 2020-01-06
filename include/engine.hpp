@@ -6,6 +6,8 @@
 
 #include "resources.hpp"
 #include "scenegraph.hpp"
+#include "shader.hpp"
+#include "window.hpp"
 
 namespace Render{
     
@@ -16,15 +18,14 @@ namespace Render{
         ~Engine() = default;
 
         void start();
-
+    protected:
         void cleanup();
         static void loop(void*);
 
-    //protected:
-
         SceneGraph scene;
-        Resources * const m_resources;
-        GLFWwindow * window;
+        Resources * const resources;
+        Shader *shader;
+        Window *window;
     };
 }
 #endif

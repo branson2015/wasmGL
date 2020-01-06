@@ -4,6 +4,7 @@
 #include "scenegraph.hpp"
 #include "transform.hpp"
 #include "resources.hpp"
+#include "logger.hpp"
 
 namespace Render{
 
@@ -48,7 +49,7 @@ namespace Render{
 
     void Node::remove(){
         if(m_parent->m_parent == nullptr){
-            std::cout << "Error, cannot remove root node" << std::endl;
+            LOG("Error, cannot remove root node");
             return;
         }
         for(std::vector<Node*>::iterator curr = m_children.begin(); curr != m_children.end(); ++curr)

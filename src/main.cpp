@@ -1,5 +1,3 @@
-#define DEBUG
-
 #include "render.hpp"
 
 /*TODO:
@@ -19,10 +17,6 @@ class MyEngine : public Render::Engine<MyEngine>{
     float lastX = window->getWidth() / 2.0f;
     float lastY = window->getHeight() / 2.0f;
     bool mousePressed = false;
-
-    // timing
-    float deltaTime = 0.0f;
-    float lastFrame = 0.0f;
 
     // Our IMGUI state
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
@@ -61,10 +55,6 @@ MyEngine::MyEngine(): camera(glm::vec3(0.0f, 0.0f, 3.0f)){
 void MyEngine::renderFrame(){
 
     process_input();
-    
-    float currentFrame = glfwGetTime();
-    deltaTime = currentFrame - lastFrame;
-    lastFrame = currentFrame;
     
     glClearColor(clear_color.x, clear_color.y, clear_color.z, 1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -134,6 +124,8 @@ int main(){
 
 
 void MyEngine::process_input(){
+    float deltaTime = timer.getDelta();
+
     if (window->getKey(GLFW_KEY_ESCAPE) == GLFW_PRESS)  window->close();
     if (window->getKey(GLFW_KEY_W) == GLFW_PRESS)       camera.ProcessKeyboard(Render::FORWARD, deltaTime);
     if (window->getKey(GLFW_KEY_S) == GLFW_PRESS)       camera.ProcessKeyboard(Render::BACKWARD, deltaTime);

@@ -29,6 +29,7 @@
 #include "helper.hpp"
 #include "scenegraph.hpp"
 #include "shader.hpp"
+#include "timer.hpp"
 #include "window.hpp"
 #include "logger.hpp"
 

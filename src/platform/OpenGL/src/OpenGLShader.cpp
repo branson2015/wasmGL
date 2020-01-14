@@ -26,7 +26,7 @@ namespace Render{
 
             glDeleteShader(vertexShader);
 
-            LOG(infoLog);
+            LOG("%s", infoLog);
 
             delete[] infoLog;
 
@@ -50,7 +50,7 @@ namespace Render{
             glDeleteShader(fragmentShader);
 
             //TODO: better error logging
-            LOG(infoLog);
+            LOG("%s", infoLog);
 
             delete[] infoLog;
 
@@ -78,7 +78,7 @@ namespace Render{
             glDeleteShader(vertexShader);
             glDeleteShader(fragmentShader);
 
-            LOG(infoLog);
+            LOG("%s", infoLog);
 
             delete[] infoLog;
 

@@ -7,6 +7,7 @@
 #include "resources.hpp"
 #include "scenegraph.hpp"
 #include "shader.hpp"
+#include "timer.hpp"
 #include "window.hpp"
 
 namespace Render{
@@ -23,6 +24,8 @@ namespace Render{
         static void loop(void*);
 
         SceneGraph scene;
+        Timer timer;
+
         Resources * const resources;
         Shader *shader;
         Window *window;

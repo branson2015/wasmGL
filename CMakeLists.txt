@@ -10,9 +10,16 @@ endif()
 #set(X11_LIB_SEARCH_PATH ${X11_LIB_SEARCH_PATH} /usr/lib/x86_64-linux-gnu)
 #set(X11_INC_SEARCH_PATH ${X11_INC_SEARCH_PATH} /usr/include/ CACHE PATH "" FORCE)
 
+##################################################################################
+#
+#   project
+#
+##################################################################################
+
 cmake_minimum_required(VERSION 3.0)
 project(render)
 
+add_compile_definitions(DEBUG)
 
 set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
 
